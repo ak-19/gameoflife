@@ -33,7 +33,7 @@ class Board:
             for c in range(col - 1, col + 2):
                 if r < 0 or c < 0 or r >= len(self.board) or c >= len(self.board[0]):
                     continue
-                if not (r == row and c == col):
+                if [r, c] != [row, col]:
                     count += self.board[r][c]
         return count
 

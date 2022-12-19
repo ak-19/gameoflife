@@ -20,7 +20,6 @@ class Game:
                     self.run = False
                 elif event.type  == pygame.KEYDOWN and self.paused and event.key == pygame.K_p:                
                     self.paused = False
-                # elif event.type  == pygame.KEYDOWN:
                     
             self.board.update()
 
@@ -29,4 +28,5 @@ class Game:
             self.board.draw()
 
             pygame.display.update()
+            
             self.clock.tick(10)
