@@ -7,9 +7,9 @@ class Game:
     def __init__(self, display):
         self.display = display
         self.run = True
-        self.paused = False
         self.clock = pygame.time.Clock()
         self.board = Board(display) 
+        self.fps = 10
 
     def run_loop(self):
         while self.run:
@@ -18,8 +18,6 @@ class Game:
                     self.run = False
                 elif event.type  == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                     self.run = False
-                elif event.type  == pygame.KEYDOWN and self.paused and event.key == pygame.K_p:                
-                    self.paused = False
                     
             self.board.update()
 
@@ -29,4 +27,4 @@ class Game:
 
             pygame.display.update()
             
-            self.clock.tick(10)
+            self.clock.tick(self.fps)
