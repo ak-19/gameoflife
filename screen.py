@@ -1,4 +1,4 @@
 class Screen:
-    WIDTH = 800
-    HEIGHT = 600
-    BOX = 10
+    WIDTH = 1600
+    HEIGHT = 980
+    CELL_SIDE = 10

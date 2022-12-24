@@ -4,10 +4,8 @@ from game import Game
 
 setup = Setup()
 
-display = setup.get_display()
+game = Game(setup.get_display())
 
-game = Game(display)
-
-game.run_loop()
+game.run_game_loop()
 
 setup.quit()

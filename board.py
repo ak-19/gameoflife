@@ -1,46 +1,53 @@
 import pygame
+
 from random import choice
-from colors import Colors
+
 from screen import Screen
 
+from colors import Colors
+
 class Board:
-    def __init__(self, display):
-        self.display = display        
-        self.board = []        
-        for r in range(Screen.WIDTH // Screen.BOX):
-            self.board.append([choice([0,1]) for _ in range(Screen.HEIGHT // Screen.BOX)])
+    def __init__(self, display) -> None:
+        self.display = display
 
-    def update(self):
-        num_rows = len(self.board)
-        num_cols = len(self.board[0])
-        new_board = [[0] * num_cols for _ in range(num_rows)]
-        for row in range(num_rows):
-            for col in range(num_cols):
-                neighbors = self.count_neighbors(row, col)
-                if self.board[row][col] == 1:
-                    if neighbors < 2 or neighbors > 3:
-                        new_board[row][col] = 0
-                    else:
-                        new_board[row][col] = 1
-                else:
-                    if neighbors == 3:
-                        new_board[row][col] = 1
-        self.board = new_board        
+        self.X = Screen.WIDTH // Screen.CELL_SIDE
+        self.Y = Screen.HEIGHT // Screen.CELL_SIDE
 
-    def count_neighbors(self, row, col):
+        self.board = []
+
+        for _ in range(self.X):
+            self.board.append([choice([0,1]) for _ in range(self.Y)])
+
+
+    def get_live_nb_count(self, xx, yy):
         count = 0
-        for r in range(row - 1, row + 2):
-            for c in range(col - 1, col + 2):
-                if r < 0 or c < 0 or r >= len(self.board) or c >= len(self.board[0]):
-                    continue
-                if [r, c] != [row, col]:
-                    count += self.board[r][c]
+        for x in range(xx - 1, xx + 2):
+            for y in range(yy - 1,yy + 2):
+                if [x, y] != [xx,yy]:
+                    if 0 <= x < self.X and 0 <= y < self.Y and self.board[x][y]:
+                        count += 1
+
         return count
 
+    def update(self):
+        new_board = [[0] * self.Y for _ in range(self.X)]
+
+        for x in range(self.X):
+            for y in range(self.Y):
+                alive_neighbours = self.get_live_nb_count(x, y)
+
+                if self.board[x][y]:
+                    if 2 <= alive_neighbours <= 3:
+                        new_board[x][y] = 1                    
+                else:
+                    if alive_neighbours == 3:
+                        new_board[x][y] = 1
+
+
+        self.board = new_board
+
     def draw(self):
-        rows = len(self.board)
-        cols = len(self.board[0])
-        for r in range(rows):
-            for c in range(cols):
-                if self.board[r][c]:
-                    pygame.draw.rect(self.display, Colors.BLACK, (r*Screen.BOX, c*Screen.BOX, Screen.BOX, Screen.BOX))
+        for x in range(self.X):
+            for y in range(self.Y):
+                if self.board[x][y]:
+                    pygame.draw.rect(self.display, Colors.BLACK, (x * Screen.CELL_SIDE, y * Screen.CELL_SIDE, Screen.CELL_SIDE, Screen.CELL_SIDE))
